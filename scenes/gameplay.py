@@ -1,4 +1,5 @@
 from values import *
+from debug import debug
 
 
 class GamePlay:
@@ -20,7 +21,6 @@ class GamePlay:
                     self.game.last_arrow_pressed = None
 
         self.game.player.update()
-        self.game.clock.tick(60)
 
     def draw(self):
         self.game.screen.fill(BACKGROUND)

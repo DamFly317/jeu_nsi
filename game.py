@@ -1,4 +1,5 @@
 import sys
+import time
 
 from pygame.surface import Surface, SurfaceType
 
@@ -14,7 +15,10 @@ class Game:
 
         self.screen = pygame.display.set_mode(SCREEN_SIZE)
         pygame.display.set_caption(GAME_TITLE)
+
         self.clock = pygame.time.Clock()
+        self.previous_time = 0
+        self.dt = 0
 
         self.state = MainMenu(self)
         self.player = Player(self)
@@ -26,7 +30,10 @@ class Game:
         self.run()
 
     def run(self):
+        self.previous_time = time.time()
         while self.running:
+            self.dt = time.time() - self.previous_time
+            self.previous_time = time.time()
             directions = [KEY_PLAYER_RIGHT, KEY_PLAYER_LEFT, KEY_PLAYER_UP, KEY_PLAYER_DOWN]
 
             self.state.draw()

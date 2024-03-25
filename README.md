@@ -36,9 +36,15 @@
     - ville futuriste
     - quêtes pour accéder aux donjons
     - boss final = super ordinateur qui veut prendre le contrôle de la ville
+
+
 - armes temporaires (genre botw)
     - protagoniste robot
     - armes à récupérer sur les ennemis
+
+- ou lancer de clé plates
+
+
 - objets de donjons (à la zelda):
     - ??
 - controles:

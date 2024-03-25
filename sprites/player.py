@@ -1,5 +1,6 @@
 import pygame
 from values import *
+from debug import debug
 
 
 class Player(pygame.sprite.Sprite):
@@ -16,17 +17,23 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = SCREEN_WIDTH // 2
         self.rect.centery = SCREEN_HEIGHT // 2
 
+        self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
+
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
 
+        distance = PLAYER_SPEED * self.game.dt
+
         if self.game.last_arrow_pressed == KEY_PLAYER_UP:
-            self.rect.y -= PLAYER_SPEED
+            self.pos.y -= distance
         if self.game.last_arrow_pressed == KEY_PLAYER_DOWN:
-            self.rect.y += PLAYER_SPEED
+            self.pos.y += distance
         if self.game.last_arrow_pressed == KEY_PLAYER_LEFT:
-            self.rect.x -= PLAYER_SPEED
+            self.pos.x -= distance
         if self.game.last_arrow_pressed == KEY_PLAYER_RIGHT:
-            self.rect.x += PLAYER_SPEED
+            self.pos.x += distance
+
+        self.rect.topleft = self.pos
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)

@@ -1,5 +1,3 @@
-from typing import List
-
 import pygame.sprite
 from values import *
 from debug import debug
