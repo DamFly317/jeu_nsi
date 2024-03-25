@@ -1,25 +1,32 @@
 import pygame.sprite
 from values import *
 from debug import debug
+from scenes.gameplay import GamePlay
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, text):
         super().__init__()
-        surface = pygame.Surface((200, 50))
-        surface.fill(PLAYER_COLOR)
-
-        self.image = surface
+        self.text = text
+        self.image = MENU_FONT.render(str(self.text), True, (0, 0, 0))
 
         self.rect = self.image.get_rect()
         self.rect.centerx = SCREEN_WIDTH // 2
         self.rect.centery = SCREEN_HEIGHT // 2
 
+    def draw(self, screen):
+        bg = pygame.Surface((self.rect.width + 20, self.rect.height + 20))
+        bg.fill((50, 200, 50))
+
+        screen.blit(bg, (self.rect.x - 10, self.rect.y - 10))
+
+        screen.blit(self.image, self.rect)
+
 
 class MainMenu:
     def __init__(self, game):
         self.game = game
-        self.buttons = pygame.sprite.Group(Button())
+        self.buttons = pygame.sprite.Group(Button('Jouer'))
 
     def update(self):
         for event in pygame.event.get():
@@ -29,11 +36,10 @@ class MainMenu:
                 x, y = pygame.mouse.get_pos()
                 for button in self.buttons.sprites():
                     if button.rect.collidepoint(x, y):
-                        print('coucou')
-
-        pygame.display.update()
+                        self.game.state = GamePlay(self.game)
 
     def draw(self):
         self.game.screen.fill(BACKGROUND)
 
-        self.buttons.draw(self.game.screen)
+        for button in self.buttons.sprites():
+            button.draw(self.game.screen)

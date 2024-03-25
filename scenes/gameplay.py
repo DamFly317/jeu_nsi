@@ -1,5 +1,6 @@
 from values import *
 
+
 class GamePlay:
     def __init__(self, game):
         self.game = game
@@ -13,18 +14,17 @@ class GamePlay:
             if event.type == pygame.KEYDOWN:
                 for arrow in directions:
                     if event.key == arrow:
-                        self.last_arrow_pressed = arrow
+                        self.game.last_arrow_pressed = arrow
             if event.type == pygame.KEYUP:
-                if event.key == self.last_arrow_pressed:
-                    self.last_arrow_pressed = None
+                if event.key == self.game.last_arrow_pressed:
+                    self.game.last_arrow_pressed = None
 
         self.game.player.update()
         self.game.clock.tick(60)
 
-
     def draw(self):
-        self.screen.fill(BACKGROUND)
+        self.game.screen.fill(BACKGROUND)
 
-        self.player.draw(self.screen)
+        self.game.player.draw(self.game.screen)
 
         pygame.display.update()

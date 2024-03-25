@@ -29,6 +29,7 @@ class Game:
 
             self.state.draw()
             self.state.update()
+            pygame.display.update()
 
         pygame.quit()
         sys.exit()
