@@ -1,3 +1,5 @@
+from typing import List
+
 import pygame.sprite
 from values import *
 from debug import debug
@@ -5,14 +7,14 @@ from scenes.gameplay import GamePlay
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, text):
+    def __init__(self, text, x=SCREEN_WIDTH // 2, y=SCREEN_HEIGHT // 2):
         super().__init__()
         self.text = text
         self.image = MENU_FONT.render(str(self.text), True, (0, 0, 0))
 
         self.rect = self.image.get_rect()
-        self.rect.centerx = SCREEN_WIDTH // 2
-        self.rect.centery = SCREEN_HEIGHT // 2
+        self.rect.centerx = x
+        self.rect.centery = y
 
     def draw(self, screen):
         bg = pygame.Surface((self.rect.width + 20, self.rect.height + 20))
@@ -26,7 +28,9 @@ class Button(pygame.sprite.Sprite):
 class MainMenu:
     def __init__(self, game):
         self.game = game
-        self.buttons = pygame.sprite.Group(Button('Jouer'))
+        self.buttons = [
+            Button('Jouer')
+        ]
 
     def update(self):
         for event in pygame.event.get():
@@ -34,12 +38,12 @@ class MainMenu:
                 self.game.running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
-                for button in self.buttons.sprites():
+                for button in self.buttons:
                     if button.rect.collidepoint(x, y):
                         self.game.state = GamePlay(self.game)
 
     def draw(self):
         self.game.screen.fill(BACKGROUND)
 
-        for button in self.buttons.sprites():
+        for button in self.buttons:
             button.draw(self.game.screen)
