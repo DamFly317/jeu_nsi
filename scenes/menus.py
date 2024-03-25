@@ -1,6 +1,7 @@
 import pygame.sprite
 from values import *
 
+
 class Button(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -13,6 +14,7 @@ class Button(pygame.sprite.Sprite):
         self.rect.centerx = SCREEN_WIDTH // 2
         self.rect.centery = SCREEN_HEIGHT // 2
 
+
 class MainMenu:
     def __init__(self, game):
         self.game = game
@@ -20,6 +22,8 @@ class MainMenu:
 
     def update(self):
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.game.running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
                 for button in self.buttons.sprites():
