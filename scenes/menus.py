@@ -1,5 +1,6 @@
 import pygame.sprite
 from values import *
+from debug import debug
 
 
 class Button(pygame.sprite.Sprite):
@@ -30,9 +31,9 @@ class MainMenu:
                     if button.rect.collidepoint(x, y):
                         print('coucou')
 
+        pygame.display.update()
+
     def draw(self):
         self.game.screen.fill(BACKGROUND)
 
         self.buttons.draw(self.game.screen)
-
-        pygame.display.update()
