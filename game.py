@@ -1,8 +1,6 @@
 import sys
 import time
 
-from pygame.surface import Surface, SurfaceType
-
 from sprites.player import Player
 from scenes.menus import *
 
