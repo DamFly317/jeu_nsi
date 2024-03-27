@@ -1,6 +1,7 @@
 # Jeu NSI
 
 ## Cahier des charges:
+
 - pygame
 - POO
 - jeu (2D)
@@ -9,15 +10,16 @@
 - menu avec choix au départ
 
 ## Idées:
+
 - vue de dessus
 - tile-mapping (en carrés)
 - télécharger:
-	tiled + pytmx
+  tiled + pytmx
 - animations:
-	- déplacement
-	- attaque
-	- (objets)
-- (musique): 
+    - déplacement
+    - attaque
+    - (objets)
+- (musique):
 - electro ou chiptune
 
 
@@ -25,12 +27,12 @@
 
 
 - difficultés:
-    facile,
-    moyen,
-    difficile,
-    hardcore (one shot, dégats nuls)
+  facile,
+  moyen,
+  difficile,
+  hardcore (one shot, dégats nuls)
 - action :
-    zelda-like
+  zelda-like
 - setting:
     - futuriste
     - ville futuriste
@@ -39,8 +41,8 @@
 
 
 - armes temporaires (genre botw)
-    - protagoniste robot
-    - armes à récupérer sur les ennemis
+  - protagoniste robot
+  - armes à récupérer sur les ennemis
 
 - ou lancer de clé plates
 
@@ -53,7 +55,7 @@
     - tab = carte
     - E = interragir
     - inventaire accessible tout le temps avec slots assignés à la croix directionnelle
-        
+
 
 - overworld:
     - ezkjfhze
