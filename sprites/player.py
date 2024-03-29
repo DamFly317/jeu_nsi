@@ -1,6 +1,5 @@
-import pygame
 from values import *
-from debug import debug
+from inventory import Inventory
 
 
 class Player(pygame.sprite.Sprite):
@@ -18,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = SCREEN_HEIGHT // 2
 
         self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
+        self.inventory = Inventory()
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)

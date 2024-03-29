@@ -1,14 +1,9 @@
 import pygame
 
-pygame.init()
-
 GAME_TITLE = 'Jeu'
 
-SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = (720, 480)
+SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = (720, 540)
 BACKGROUND = '#d8dcb4'
-
-# MENU
-MENU_FONT = pygame.font.Font(None, 70)
 
 # KEYS
 KEY_PLAYER_DOWN = pygame.K_s

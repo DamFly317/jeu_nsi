@@ -8,7 +8,8 @@ class Button(pygame.sprite.Sprite):
     def __init__(self, text, x=SCREEN_WIDTH // 2, y=SCREEN_HEIGHT // 2):
         super().__init__()
         self.text = text
-        self.image = MENU_FONT.render(str(self.text), True, (0, 0, 0))
+        font = pygame.font.Font(None, 70)
+        self.image = font.render(str(self.text), True, (0, 0, 0))
 
         self.rect = self.image.get_rect()
         self.rect.centerx = x
