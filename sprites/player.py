@@ -3,26 +3,25 @@ from inventory import Inventory
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game):
-        super().__init__()
+    def __init__(self, game, *groups):
         self.game = game
+        super().__init__(*groups)
 
         surface = pygame.Surface(PLAYER_SIZE)
         surface.fill(PLAYER_COLOR)
 
         self.image = surface
-
-        self.rect = self.image.get_rect()
-        self.rect.centerx = SCREEN_WIDTH // 2
-        self.rect.centery = SCREEN_HEIGHT // 2
+        self.rect = self.image.get_rect(center=(1000, 1000))
+        self.z = LAYERS['main']
 
         self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
+        self.speed = 200
         self.inventory = Inventory()
 
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
 
-        distance = PLAYER_SPEED * self.game.dt
+        distance = self.speed * self.game.dt
 
         if self.game.last_arrow_pressed == KEY_PLAYER_UP:
             self.pos.y -= distance

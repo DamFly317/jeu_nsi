@@ -10,11 +10,10 @@ class Slot(pygame.sprite.Sprite):
         self.space_between = 7
 
         self.image_selected = pygame.transform.scale2x(
-            pygame.image.load('assets/slot_selected.png')
+            pygame.image.load('graphics/slot_selected.png')
         )
         self.image_available = pygame.transform.scale2x(
-            pygame.image.load('assets/slot_available.png')
-
+            pygame.image.load('graphics/slot_available.png')
         )
 
         self.image = self.image_available

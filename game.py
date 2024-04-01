@@ -1,8 +1,11 @@
 import sys
 import time
 
+import pygame.sprite
+
 from sprites.player import Player
 from scenes.menus import *
+from scenes.gameplay import CameraGroup
 
 
 class Game:
@@ -19,7 +22,6 @@ class Game:
         self.dt = 0
 
         self.state = MainMenu(self)
-        self.player = Player(self)
 
         self.last_arrow_pressed = None
 
