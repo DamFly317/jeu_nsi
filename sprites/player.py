@@ -1,5 +1,6 @@
 from values import *
-from inventory import Inventory
+from ui import Inventory
+from debug import debug
 
 
 class Player(pygame.sprite.Sprite):
@@ -15,7 +16,8 @@ class Player(pygame.sprite.Sprite):
         self.z = LAYERS['main']
 
         self.pos = pygame.math.Vector2(self.rect.x, self.rect.y)
-        self.speed = 200
+        self.speed = 300
+        self.direction = 'down'
         self.inventory = Inventory()
 
     def update(self, *args, **kwargs):
@@ -23,14 +25,16 @@ class Player(pygame.sprite.Sprite):
 
         distance = self.speed * self.game.dt
 
-        if self.game.last_arrow_pressed == KEY_PLAYER_UP:
-            self.pos.y -= distance
-        if self.game.last_arrow_pressed == KEY_PLAYER_DOWN:
-            self.pos.y += distance
-        if self.game.last_arrow_pressed == KEY_PLAYER_LEFT:
-            self.pos.x -= distance
-        if self.game.last_arrow_pressed == KEY_PLAYER_RIGHT:
-            self.pos.x += distance
+        if len(self.game.lifo_direction_key_pressed) > 0:
+
+            if self.game.lifo_direction_key_pressed[-1] == KEY_PLAYER_UP:
+                self.pos.y -= distance
+            if self.game.lifo_direction_key_pressed[-1] == KEY_PLAYER_DOWN:
+                self.pos.y += distance
+            if self.game.lifo_direction_key_pressed[-1] == KEY_PLAYER_LEFT:
+                self.pos.x -= distance
+            if self.game.lifo_direction_key_pressed[-1] == KEY_PLAYER_RIGHT:
+                self.pos.x += distance
 
         self.rect.topleft = self.pos
 

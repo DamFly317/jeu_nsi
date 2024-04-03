@@ -1,6 +1,7 @@
 import pygame.image
 
 from values import *
+from debug import debug
 from sprites.sprites import Generic
 from sprites.player import Player
 
@@ -12,7 +13,7 @@ class GamePlay:
 
         self.player = Player(self.game, self.all_sprites)
         # Ground
-        Generic(
+        self.ground = Generic(
             (0, 0),
             pygame.image.load('graphics/ground.png'),
             self.all_sprites,
@@ -27,24 +28,24 @@ class GamePlay:
                 self.game.running = False
 
             if event.type == pygame.KEYDOWN:
-                for arrow in directions:
-                    if event.key == arrow:
-                        self.game.last_arrow_pressed = arrow
+                if event.key in directions:
+                    self.game.lifo_direction_key_pressed.append(event.key)
+
                 if event.key == KEY_INVENTORY_RIGHT:
                     self.player.inventory.right()
                 elif event.key == KEY_INVENTORY_LEFT:
                     self.player.inventory.left()
 
             if event.type == pygame.KEYUP:
-                if event.key == self.game.last_arrow_pressed:
-                    self.game.last_arrow_pressed = None
+                if event.key in self.game.lifo_direction_key_pressed:
+                    self.game.lifo_direction_key_pressed.remove(event.key)
 
         self.player.update()
 
     def draw(self):
         self.game.screen.fill(BACKGROUND)
 
-        self.all_sprites.custom_draw(self.player)
+        self.all_sprites.custom_draw(self.player, self.ground)
 
         self.player.inventory.draw(self.game.screen)
         pygame.display.update()
@@ -56,9 +57,16 @@ class CameraGroup(pygame.sprite.Group):
         self.game = game
         self.offset = pygame.math.Vector2()
 
-    def custom_draw(self, player):
-        self.offset.x = player.rect.centerx - SCREEN_WIDTH // 2
-        self.offset.y = player.rect.centery - SCREEN_HEIGHT // 2
+    def custom_draw(self, player, ground):
+        self.offset.x = min(
+            ground.rect.width - SCREEN_WIDTH,
+            max(0, player.rect.centerx - SCREEN_WIDTH // 2)
+        )
+        self.offset.y = min(
+            ground.rect.height - SCREEN_HEIGHT,
+            max(0, player.rect.centery - SCREEN_HEIGHT // 2)
+        )
+
         for layer in LAYERS.values():
             for sprite in self.sprites():
                 if sprite.z == layer:

@@ -1,5 +1,7 @@
+import math
 import sys
 import time
+from typing import List, Any
 
 import pygame.sprite
 
@@ -9,6 +11,8 @@ from scenes.gameplay import CameraGroup
 
 
 class Game:
+    lifo_direction_key_pressed: List[Any]
+
     def __init__(self):
         pygame.init()
 
@@ -19,11 +23,12 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.previous_time = 0
-        self.dt = 0
+        self.dt = 1
 
         self.state = MainMenu(self)
+        self.difficulty = 0
 
-        self.last_arrow_pressed = None
+        self.lifo_direction_key_pressed = []
 
     def start(self):
         # Instructions au démarage
@@ -32,12 +37,13 @@ class Game:
     def run(self):
         self.previous_time = time.time()
         while self.running:
-            self.dt = time.time() - self.previous_time
-            self.previous_time = time.time()
-            directions = [KEY_PLAYER_RIGHT, KEY_PLAYER_LEFT, KEY_PLAYER_UP, KEY_PLAYER_DOWN]
 
             self.state.draw()
             self.state.update()
+
+            self.dt = time.time() - self.previous_time
+            self.previous_time = time.time()
+
             pygame.display.update()
 
         pygame.quit()

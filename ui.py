@@ -4,7 +4,7 @@ from values import *
 
 
 class Slot(pygame.sprite.Sprite):
-    def __init__(self, i):
+    def __init__(self, i, n):
         super().__init__()
         self.size = 64
         self.space_between = 7
@@ -19,7 +19,7 @@ class Slot(pygame.sprite.Sprite):
         self.image = self.image_available
 
         x = (
-                SCREEN_WIDTH // 2 - 5 * (self.size + self.space_between) +
+                SCREEN_WIDTH // 2 - n / 2 * (self.size + self.space_between) +
                 i * (self.size + self.space_between) + self.space_between // 2
         )
         y = SCREEN_HEIGHT - self.size - 5
@@ -35,7 +35,7 @@ class Slot(pygame.sprite.Sprite):
 class Inventory(pygame.sprite.Group):
     def __init__(self):
         self.items_number = 10
-        self.slots = [Slot(i) for i in range(self.items_number)]
+        self.slots = [Slot(i, self.items_number) for i in range(self.items_number)]
         self.items = [None for _ in range(self.items_number)]
         self.selected_slot = 0
 
