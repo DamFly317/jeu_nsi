@@ -45,14 +45,9 @@ class Game:
             self.dt = time.time() - self.previous_time
             self.previous_time = time.time()
 
-            if math.floor(self.previous_time) > self.previous_second:
-                self.fps = self.fps_count
-                self.fps_count = 0
-                self.previous_second = math.floor(self.previous_time)
-
             self.state.draw()
             self.state.update()
-            debug('FPS : ' + str(self.fps), x=SCREEN_WIDTH - 100)
+            self.count_fps()
             pygame.display.update()
             self.fps_count += 1
 
@@ -60,5 +55,10 @@ class Game:
         sys.exit()
 
     def count_fps(self):
-        pass
+        if math.floor(self.previous_time) > self.previous_second:
+            self.fps = self.fps_count
+            self.fps_count = 0
+            self.previous_second = math.floor(self.previous_time)
+
+        debug('FPS : ' + str(self.fps), x=SCREEN_WIDTH - 100)
 
