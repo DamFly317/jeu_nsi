@@ -5,9 +5,7 @@ from typing import List, Any
 
 import pygame.sprite
 
-from sprites.player import Player
 from scenes.menus import *
-from scenes.gameplay import CameraGroup
 
 
 class Game:
@@ -28,7 +26,9 @@ class Game:
         self.fps_count = 0
         self.previous_second = 0
 
-        self.state = MainMenu(self)
+        self.main_menu = MainMenu(self)
+        self.gameplay = GamePlay(self)
+        self.state = self.main_menu
         self.difficulty = 0
 
         self.lifo_direction_key_pressed = []

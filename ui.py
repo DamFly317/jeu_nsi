@@ -1,6 +1,6 @@
 import pygame.transform
 
-from values import *
+from settings import *
 
 
 class Slot(pygame.sprite.Sprite):

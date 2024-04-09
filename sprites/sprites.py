@@ -1,5 +1,5 @@
 import pygame
-from values import *
+from settings import *
 
 
 class Generic(pygame.sprite.Sprite):

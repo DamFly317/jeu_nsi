@@ -1,5 +1,5 @@
 import pygame.sprite
-from values import *
+from settings import *
 from debug import debug
 from scenes.gameplay import GamePlay
 
@@ -53,7 +53,7 @@ class MainMenu:
                 for button in self.buttons:
                     if button.rect.collidepoint(x, y):
                         if button == self.button_play:
-                            self.game.state = GamePlay(self.game)
+                            self.game.state = self.game.gameplay
                         elif button == self.button_difficulty:
                             self.game.state = DifficultyMenu(self.game)
 
@@ -88,10 +88,10 @@ class DifficultyMenu(MainMenu):
                     if button.rect.collidepoint(x, y):
                         if button == self.button_easy:
                             self.game.difficulty = 0
-                            self.game.state = MainMenu(self.game)
+                            self.game.action = MainMenu(self.game)
                         elif button == self.button_medium:
                             self.game.difficulty = 1
-                            self.game.state = MainMenu(self.game)
+                            self.game.action = MainMenu(self.game)
                         elif button == self.button_hard:
                             self.game.difficulty = 2
-                            self.game.state = MainMenu(self.game)
+                            self.game.action = MainMenu(self.game)

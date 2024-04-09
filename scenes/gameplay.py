@@ -1,6 +1,6 @@
 import pygame.image
 
-from values import *
+from settings import *
 from debug import debug
 from sprites.sprites import Generic
 from sprites.player import Player
@@ -9,14 +9,14 @@ from sprites.player import Player
 class GamePlay:
     def __init__(self, game):
         self.game = game
-        self.all_sprites = CameraGroup(self.game)
+        self.all_visible_sprites = CameraGroup(self.game)
 
-        self.player = Player(self.game, self.all_sprites)
+        self.player = Player(self.game, self.all_visible_sprites)
         # Ground
         self.ground = Generic(
             (0, 0),
-            pygame.image.load('graphics/ground.png'),
-            self.all_sprites,
+            pygame.image.load('graphics/ground.png').convert_alpha(),
+            self.all_visible_sprites,
             z=LAYERS['ground']
         )
 
@@ -45,7 +45,7 @@ class GamePlay:
     def draw(self):
         self.game.screen.fill(BACKGROUND)
 
-        self.all_sprites.custom_draw(self.player, self.ground)
+        self.all_visible_sprites.custom_draw(self.player, self.ground)
 
         self.player.inventory.draw(self.game.screen)
         pygame.display.update()
