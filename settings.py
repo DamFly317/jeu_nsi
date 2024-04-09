@@ -2,7 +2,6 @@ import pygame
 
 GAME_TITLE = 'Jeu'
 
-SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = (1080, 720)
 BACKGROUND = '#5a79c8'
 
 # KEYS

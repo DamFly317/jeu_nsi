@@ -5,8 +5,10 @@ from scenes.gameplay import GamePlay
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, text, i, n, *groups):
-        super().__init__(*groups)
+    def __init__(self, text, i, group):
+        super().__init__(group)
+        self.group = group
+        self.i = i
         self.text = text
         font = pygame.font.Font(None, 70)
         self.image = font.render(str(self.text), True, (0, 0, 0))
@@ -16,15 +18,22 @@ class Button(pygame.sprite.Sprite):
         self.space_between = 75
         self.height = self.rect.height
 
-        x = (SCREEN_WIDTH - self.rect.width) // 2
+    def set_position(self):
+        n = len(self.group)
+        screen_width = pygame.display.get_surface().get_width()
+        screen_height = pygame.display.get_surface().get_height()
+
+        x = (screen_width - self.rect.width) // 2
 
         y = (
-                SCREEN_HEIGHT / 2 - n / 2 * (self.height + self.space_between) +
-                i * (self.height + self.space_between) + self.space_between / 2
+                screen_height / 2 - n / 2 * (self.height + self.space_between) +
+                self.i * (self.height + self.space_between) + self.space_between / 2
         )
 
         self.rect.x = x
         self.rect.y = y
+
+        return self
 
     def draw(self, screen):
         bg = pygame.Surface((self.rect.width + 20, self.rect.height + 20))
@@ -41,8 +50,12 @@ class MainMenu:
 
         self.buttons = pygame.sprite.Group()
 
-        self.button_play = Button('Jouer', 0, 2, self.buttons)
-        self.button_difficulty = Button('Difficulté', 1, 2, self.buttons)
+        self.button_play = Button('Jouer', 0, self.buttons)
+        self.button_difficulty = Button('Difficulté', 1, self.buttons)
+        self.button_exit = Button('Quitter', 2, self.buttons)
+
+        for button in self.buttons:
+            button.set_position()
 
     def update(self):
         for event in pygame.event.get():
@@ -56,6 +69,8 @@ class MainMenu:
                             self.game.state = self.game.gameplay
                         elif button == self.button_difficulty:
                             self.game.state = DifficultyMenu(self.game)
+                        elif button == self.button_exit:
+                            self.game.quit()
 
     def draw(self):
         self.game.screen.fill(BACKGROUND)
@@ -74,9 +89,12 @@ class DifficultyMenu(MainMenu):
 
         self.buttons = pygame.sprite.Group()
 
-        self.button_easy = Button('Facile', 0, 3, self.buttons)
-        self.button_medium = Button('Moyen', 1, 3, self.buttons)
-        self.button_hard = Button('Hardcore', 2, 3, self.buttons)
+        self.button_easy = Button('Facile', 0, self.buttons)
+        self.button_medium = Button('Moyen', 1, self.buttons)
+        self.button_hard = Button('Hardcore', 2, self.buttons)
+
+        for button in self.buttons:
+            button.set_position()
 
     def update(self):
         for event in pygame.event.get():
@@ -88,10 +106,9 @@ class DifficultyMenu(MainMenu):
                     if button.rect.collidepoint(x, y):
                         if button == self.button_easy:
                             self.game.difficulty = 0
-                            self.game.action = MainMenu(self.game)
                         elif button == self.button_medium:
                             self.game.difficulty = 1
-                            self.game.action = MainMenu(self.game)
                         elif button == self.button_hard:
                             self.game.difficulty = 2
-                            self.game.action = MainMenu(self.game)
+
+                        self.game.state = self.game.main_menu

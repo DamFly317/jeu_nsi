@@ -41,8 +41,6 @@ class Player(pygame.sprite.Sprite):
 
                 self.animation_frames[state][direction] = frames
 
-        print(self.animation_frames)
-
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
 

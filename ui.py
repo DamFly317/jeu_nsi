@@ -18,11 +18,13 @@ class Slot(pygame.sprite.Sprite):
 
         self.image = self.image_available
 
+        screen_width = pygame.display.get_surface().get_width()
+        screen_height = pygame.display.get_surface().get_height()
         x = (
-                SCREEN_WIDTH // 2 - n / 2 * (self.size + self.space_between) +
+                screen_width // 2 - n / 2 * (self.size + self.space_between) +
                 i * (self.size + self.space_between) + self.space_between // 2
         )
-        y = SCREEN_HEIGHT - self.size - 5
+        y = screen_height - self.size - 5
         self.rect = self.image.get_rect(topleft=(x, y))
 
     def change_state(self, selected: bool):

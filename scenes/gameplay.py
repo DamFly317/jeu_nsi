@@ -36,6 +36,9 @@ class GamePlay:
                 elif event.key == KEY_INVENTORY_LEFT:
                     self.player.inventory.left()
 
+                if event.key == pygame.K_ESCAPE:
+                    self.game.state = self.game.main_menu
+
             if event.type == pygame.KEYUP:
                 if event.key in self.game.lifo_direction_key_pressed:
                     self.game.lifo_direction_key_pressed.remove(event.key)
@@ -59,12 +62,12 @@ class CameraGroup(pygame.sprite.Group):
 
     def custom_draw(self, player, ground):
         self.offset.x = min(
-            ground.rect.width - SCREEN_WIDTH,
-            max(0, player.rect.centerx - SCREEN_WIDTH // 2)
+            ground.rect.width - self.game.screen_width,
+            max(0, player.rect.centerx - self.game.screen_width // 2)
         )
         self.offset.y = min(
-            ground.rect.height - SCREEN_HEIGHT,
-            max(0, player.rect.centery - SCREEN_HEIGHT // 2)
+            ground.rect.height - self.game.screen_height,
+            max(0, player.rect.centery - self.game.screen_height // 2)
         )
 
         for layer in LAYERS.values():

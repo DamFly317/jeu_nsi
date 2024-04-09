@@ -16,8 +16,10 @@ class Game:
 
         self.running = True
 
-        self.screen = pygame.display.set_mode(SCREEN_SIZE)
+        self.screen = pygame.display.set_mode((0, 0))
         pygame.display.set_caption(GAME_TITLE)
+        self.screen_width = self.screen.get_width()
+        self.screen_height = self.screen.get_height()
 
         self.clock = pygame.time.Clock()
         self.previous_time = 0
@@ -37,6 +39,12 @@ class Game:
         # Instructions au démarage
         self.run()
 
+    def quit(self):
+        self.running = False
+        print('coucou')
+        pygame.quit()
+        sys.exit()
+
     def run(self):
         self.previous_time = time.time()
         self.previous_second = math.floor(self.previous_time)
@@ -51,8 +59,7 @@ class Game:
             pygame.display.update()
             self.fps_count += 1
 
-        pygame.quit()
-        sys.exit()
+        self.quit()
 
     def count_fps(self):
         if math.floor(self.previous_time) > self.previous_second:
@@ -60,5 +67,5 @@ class Game:
             self.fps_count = 0
             self.previous_second = math.floor(self.previous_time)
 
-        debug('FPS : ' + str(self.fps), x=SCREEN_WIDTH - 100)
+        debug('FPS : ' + str(self.fps), x=self.screen_width - 100)
 
