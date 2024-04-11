@@ -35,10 +35,10 @@ class Slot(pygame.sprite.Sprite):
 
 
 class Inventory(pygame.sprite.Group):
-    def __init__(self):
-        self.items_number = 10
-        self.slots = [Slot(i, self.items_number) for i in range(self.items_number)]
-        self.items = [None for _ in range(self.items_number)]
+    def __init__(self, slots_number):
+        self.slots_number = slots_number
+        self.slots = [Slot(i, self.slots_number) for i in range(self.slots_number)]
+        self.items = [None for _ in range(self.slots_number)]
         self.selected_slot = 0
 
         super().__init__(self.slots)
@@ -51,7 +51,7 @@ class Inventory(pygame.sprite.Group):
     def right(self):
         self.slots[self.selected_slot].change_state(selected=False)
         self.selected_slot += 1
-        if self.selected_slot >= self.items_number:
+        if self.selected_slot >= self.slots_number:
             self.selected_slot = 0
         self.update()
 
@@ -59,5 +59,5 @@ class Inventory(pygame.sprite.Group):
         self.slots[self.selected_slot].change_state(selected=False)
         self.selected_slot -= 1
         if self.selected_slot < 0:
-            self.selected_slot = self.items_number - 1
+            self.selected_slot = self.slots_number - 1
         self.update()

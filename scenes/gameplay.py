@@ -1,4 +1,5 @@
 import pygame.image
+from pytmx.util_pygame import load_pygame
 
 from settings import *
 from debug import debug
@@ -9,16 +10,58 @@ from sprites.player import Player
 class GamePlay:
     def __init__(self, game):
         self.game = game
-        self.all_visible_sprites = CameraGroup(self.game)
+        self.all_sprites = CameraGroup(self.game)
+        self.collision_sprites = pygame.sprite.Group()
 
-        self.player = Player(self.game, self.all_visible_sprites)
-        # Ground
-        self.ground = Generic(
-            (0, 0),
-            pygame.image.load('graphics/ground.png').convert_alpha(),
-            self.all_visible_sprites,
-            z=LAYERS['ground']
+        tmx_data = self.load_map('data/tmx/basic.tmx')
+        self.world_width = tmx_data.width * 64
+        self.world_height = tmx_data.height * 64
+
+        player_pos = tmx_data.get_object_by_name('player')
+        self.player = Player(
+            self.game,
+            player_pos.x,
+            player_pos.y,
+            self.collision_sprites,
+            self.all_sprites
         )
+
+    def load_map(self, path):
+        tmx_data = load_pygame(path)
+
+        for obj in tmx_data.objects:
+            if obj.name == 'collision':
+                surf = pygame.Surface((obj.width * 4, obj.height * 4))
+                surf.fill('red')
+                Generic(
+                    (obj.x * 4, obj.y * 4),
+                    surf,
+                    self.collision_sprites,
+                )
+
+        for layer_name in LAYERS[self.game.world].keys():
+            try:
+                tiles = tmx_data.get_layer_by_name(layer_name).tiles()
+            except ValueError:
+                tiles = []
+
+            for x, y, surf in tiles:
+                if layer_name == 'Walls':
+                    Generic(
+                        (x * 64, y * 64),
+                        pygame.transform.scale(surf, (64, 64)),
+                        self.all_sprites, self.collision_sprites,
+                        z=LAYERS[self.game.world][layer_name]
+                    )
+                else:
+                    Generic(
+                        (x * 64, y * 64),
+                        pygame.transform.scale(surf, (64, 64)),
+                        self.all_sprites,
+                        z=LAYERS[self.game.world][layer_name]
+                    )
+
+        return tmx_data
 
     def update(self):
         directions = [KEY_PLAYER_RIGHT, KEY_PLAYER_LEFT, KEY_PLAYER_UP, KEY_PLAYER_DOWN]
@@ -48,7 +91,7 @@ class GamePlay:
     def draw(self):
         self.game.screen.fill(BACKGROUND)
 
-        self.all_visible_sprites.custom_draw(self.player, self.ground)
+        self.all_sprites.custom_draw(self.player)
 
         self.player.inventory.draw(self.game.screen)
         pygame.display.update()
@@ -60,18 +103,17 @@ class CameraGroup(pygame.sprite.Group):
         self.game = game
         self.offset = pygame.math.Vector2()
 
-    def custom_draw(self, player, ground):
-        self.offset.x = min(
-            ground.rect.width - self.game.screen_width,
-            max(0, player.rect.centerx - self.game.screen_width // 2)
-        )
-        self.offset.y = min(
-            ground.rect.height - self.game.screen_height,
-            max(0, player.rect.centery - self.game.screen_height // 2)
-        )
+    def custom_draw(self, player):
+        self.offset.x = player.rect.centerx - self.game.screen_width // 2
+        self.offset.x = min(self.offset.x, self.game.gameplay.world_width - self.game.screen_width)
+        self.offset.x = max(0, self.offset.x)
 
-        for layer in LAYERS.values():
-            for sprite in self.sprites():
+        self.offset.y = player.rect.centery - self.game.screen_height // 2
+        self.offset.y = min(self.offset.y, self.game.gameplay.world_height - self.game.screen_height)
+        self.offset.y = max(0, self.offset.y)
+
+        for layer_name, layer in LAYERS[self.game.world].items():
+            for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset

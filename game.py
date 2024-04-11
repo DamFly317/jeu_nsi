@@ -28,10 +28,11 @@ class Game:
         self.fps_count = 0
         self.previous_second = 0
 
+        self.difficulty = 0
+        self.world = 0
         self.main_menu = MainMenu(self)
         self.gameplay = GamePlay(self)
         self.state = self.main_menu
-        self.difficulty = 0
 
         self.lifo_direction_key_pressed = []
 
@@ -41,7 +42,6 @@ class Game:
 
     def quit(self):
         self.running = False
-        print('coucou')
         pygame.quit()
         sys.exit()
 
@@ -68,4 +68,3 @@ class Game:
             self.previous_second = math.floor(self.previous_time)
 
         debug('FPS : ' + str(self.fps), x=self.screen_width - 100)
-

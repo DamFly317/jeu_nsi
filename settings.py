@@ -18,8 +18,12 @@ KEY_INVENTORY_LEFT = pygame.K_LEFT
 PLAYER_SIZE = PLAYER_WIDTH, PLAYER_HEIGHT = (50, 50)
 PLAYER_COLOR = (255, 0, 0)
 
-LAYERS = {
-    'void': 0,
-    'ground': 1,
-    'main': 2
-}
+LAYERS = [
+    {
+        'Ground': 0,
+        'Walls': 1,
+        'Decoration': 2,
+        'Main': 3
+    }
+]
+
