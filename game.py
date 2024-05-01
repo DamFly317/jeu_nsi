@@ -6,6 +6,7 @@ from typing import List, Any
 import pygame.sprite
 
 from scenes.menus import *
+from scenes.pause import Pause
 
 
 class Game:
@@ -32,6 +33,7 @@ class Game:
         self.world = 0
         self.main_menu = MainMenu(self)
         self.gameplay = GamePlay(self)
+        self.pause_menu = Pause(self)
         self.state = self.main_menu
 
         self.lifo_direction_key_pressed = []
@@ -54,6 +56,7 @@ class Game:
             self.previous_time = time.time()
 
             self.state.draw()
+            pygame.display.update()
             self.state.update()
             self.count_fps()
             pygame.display.update()

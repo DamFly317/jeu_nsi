@@ -8,7 +8,7 @@ from debug import debug
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, x, y, collision_sprites, *groups):
+    def __init__(self, game, x, y, collision_group, coin_group, *groups):
         self.game = game
         super().__init__(*groups)
 
@@ -17,10 +17,12 @@ class Player(pygame.sprite.Sprite):
         self.direction = 'down'
         self.action = 'idle'
 
-        self.collision_sprites = collision_sprites
+        self.collision_group = collision_group
+        self.coin_group = coin_group
 
         self.slots_number = 6
         self.inventory = Inventory(self.slots_number)
+        self.coins = 0
 
         self.frame_index = 0
         self.animation_frames = {}
@@ -52,12 +54,13 @@ class Player(pygame.sprite.Sprite):
         self.move()
         self.collide()
         self.animate()
+        debug(self.coins)
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def collide(self):
-        for sprite in self.collision_sprites.sprites():
+        for sprite in self.collision_group.sprites():
             if hasattr(sprite, 'hitbox'):
                 if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction == 'right':
@@ -72,6 +75,11 @@ class Player(pygame.sprite.Sprite):
                     self.rect.center = self.hitbox.center
                     self.pos.x = self.rect.centerx
                     self.pos.y = self.rect.centery
+
+        for coin in self.coin_group:
+            if coin.hitbox.colliderect(self.hitbox):
+                coin.kill()
+                self.coins += 1
 
     def move(self):
         if len(self.game.lifo_direction_key_pressed) > 0:

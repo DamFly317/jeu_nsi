@@ -3,7 +3,7 @@ from pytmx.util_pygame import load_pygame
 
 from settings import *
 from debug import debug
-from sprites.sprites import Generic
+from sprites.sprites import *
 from sprites.player import Player
 
 
@@ -11,7 +11,8 @@ class GamePlay:
     def __init__(self, game):
         self.game = game
         self.all_sprites = CameraGroup(self.game)
-        self.collision_sprites = pygame.sprite.Group()
+        self.collision_group = pygame.sprite.Group()
+        self.coin_group = pygame.sprite.Group()
 
         tmx_data = self.load_map('data/tmx/basic.tmx')
         self.world_width = tmx_data.width * 64
@@ -22,8 +23,14 @@ class GamePlay:
             self.game,
             player_pos.x,
             player_pos.y,
-            self.collision_sprites,
+            self.collision_group,
+            self.coin_group,
             self.all_sprites
+        )
+
+        Coin(
+            (player_pos.x * 4, player_pos.y * 4 - 200),
+            self.all_sprites, self.coin_group
         )
 
     def load_map(self, path):
@@ -36,7 +43,7 @@ class GamePlay:
                 Generic(
                     (obj.x * 4, obj.y * 4),
                     surf,
-                    self.collision_sprites,
+                    self.collision_group,
                 )
 
         for layer_name in LAYERS[self.game.world].keys():
@@ -50,7 +57,7 @@ class GamePlay:
                     Generic(
                         (x * 64, y * 64),
                         pygame.transform.scale(surf, (64, 64)),
-                        self.all_sprites, self.collision_sprites,
+                        self.all_sprites, self.collision_group,
                         z=LAYERS[self.game.world][layer_name]
                     )
                 else:
@@ -80,7 +87,7 @@ class GamePlay:
                     self.player.inventory.left()
 
                 if event.key == pygame.K_ESCAPE:
-                    self.game.state = self.game.main_menu
+                    self.game.state = self.game.pause_menu
 
             if event.type == pygame.KEYUP:
                 if event.key in self.game.lifo_direction_key_pressed:
@@ -94,7 +101,6 @@ class GamePlay:
         self.all_sprites.custom_draw(self.player)
 
         self.player.inventory.draw(self.game.screen)
-        pygame.display.update()
 
 
 class CameraGroup(pygame.sprite.Group):
