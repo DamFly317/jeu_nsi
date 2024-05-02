@@ -33,6 +33,7 @@ class Game:
         self.world = 0
         self.main_menu = MainMenu(self)
         self.gameplay = GamePlay(self)
+        self.gameplay.player.load_environement()
         self.pause_menu = Pause(self)
         self.state = self.main_menu
 

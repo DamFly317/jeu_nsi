@@ -24,6 +24,16 @@ LAYERS = [
         'Walls': 1,
         'Decoration': 2,
         'Main': 3
-    }
+    },  # LEVEL 0
+    {
+        'Water': 0,
+        'Ground': 1,
+        'Bridge': 2,
+        'Walls': 3,
+        'Houses': 4,
+        'Decorations': 5,
+        'Main': 6,
+        'Coins': 7
+    },  #LEVEL 1
 ]
 

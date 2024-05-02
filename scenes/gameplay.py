@@ -14,11 +14,11 @@ class GamePlay:
         self.collision_group = pygame.sprite.Group()
         self.coin_group = pygame.sprite.Group()
 
-        tmx_data = self.load_map('data/tmx/basic.tmx')
-        self.world_width = tmx_data.width * 64
-        self.world_height = tmx_data.height * 64
+        self.world_width = 0
+        self.world_height = 0
+        self.tmx_data = self.load_map('data/tmx/level_0.tmx')
 
-        player_pos = tmx_data.get_object_by_name('player')
+        player_pos = self.tmx_data.get_object_by_name('player')
         self.player = Player(
             self.game,
             player_pos.x,
@@ -28,15 +28,17 @@ class GamePlay:
             self.all_sprites
         )
 
-        Coin(
-            (player_pos.x * 4, player_pos.y * 4 - 200),
-            self.all_sprites, self.coin_group
-        )
-
     def load_map(self, path):
-        tmx_data = load_pygame(path)
+        self.tmx_data = load_pygame(path)
 
-        for obj in tmx_data.objects:
+        self.world_width = self.tmx_data.width * 64
+        self.world_height = self.tmx_data.height * 64
+
+        self.all_sprites.empty()
+        self.collision_group.empty()
+        self.coin_group.empty()
+
+        for obj in self.tmx_data.objects:
             if obj.name == 'collision':
                 surf = pygame.Surface((obj.width * 4, obj.height * 4))
                 surf.fill('red')
@@ -48,7 +50,7 @@ class GamePlay:
 
         for layer_name in LAYERS[self.game.world].keys():
             try:
-                tiles = tmx_data.get_layer_by_name(layer_name).tiles()
+                tiles = self.tmx_data.get_layer_by_name(layer_name).tiles()
             except ValueError:
                 tiles = []
 
@@ -60,6 +62,12 @@ class GamePlay:
                         self.all_sprites, self.collision_group,
                         z=LAYERS[self.game.world][layer_name]
                     )
+                elif layer_name == 'Coins':
+                    Coin(
+                        (x * 64, y * 64),
+                        self.all_sprites, self.coin_group
+                    )
+                    print('coin')
                 else:
                     Generic(
                         (x * 64, y * 64),
@@ -68,7 +76,7 @@ class GamePlay:
                         z=LAYERS[self.game.world][layer_name]
                     )
 
-        return tmx_data
+        return self.tmx_data
 
     def update(self):
         directions = [KEY_PLAYER_RIGHT, KEY_PLAYER_LEFT, KEY_PLAYER_UP, KEY_PLAYER_DOWN]
@@ -110,11 +118,11 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
     def custom_draw(self, player):
-        self.offset.x = player.rect.centerx - self.game.screen_width // 2
+        self.offset.x = player.pos.x - self.game.screen_width // 2
         self.offset.x = min(self.offset.x, self.game.gameplay.world_width - self.game.screen_width)
         self.offset.x = max(0, self.offset.x)
 
-        self.offset.y = player.rect.centery - self.game.screen_height // 2
+        self.offset.y = player.pos.y - self.game.screen_height // 2
         self.offset.y = min(self.offset.y, self.game.gameplay.world_height - self.game.screen_height)
         self.offset.y = max(0, self.offset.y)
 
@@ -124,3 +132,10 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.game.screen.blit(sprite.image, offset_rect)
+
+        pygame.draw.rect(
+            self.game.screen,
+            'red',
+            (player.hitbox.topleft - self.offset, (player.hitbox.w, player.hitbox.h)),
+            1
+        )

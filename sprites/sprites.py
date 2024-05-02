@@ -14,10 +14,8 @@ class Generic(pygame.sprite.Sprite):
 class Coin(Generic):
     def __init__(self, pos, *groups):
         super().__init__(
-            (0, 0),
+            pos,
             pygame.transform.scale(pygame.image.load('graphics/coin.png'), (50, 50)),
             *groups,
             z=LAYERS[0]['Main']
         )
-        self.rect.center = pos
-        self.hitbox = self.rect.copy()

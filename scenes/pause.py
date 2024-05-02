@@ -27,4 +27,3 @@ class Pause:
             if event.type == pygame.KEYUP:
                 if event.key in self.game.lifo_direction_key_pressed:
                     self.game.lifo_direction_key_pressed.remove(event.key)
-

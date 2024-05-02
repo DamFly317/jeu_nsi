@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         super().__init__(*groups)
 
-        self.pos = pygame.math.Vector2(x*4, y*4)
+        self.pos = pygame.math.Vector2(x * 4, y * 4)
         self.speed = 300
         self.direction = 'down'
         self.action = 'idle'
@@ -28,10 +28,28 @@ class Player(pygame.sprite.Sprite):
         self.animation_frames = {}
         self.load_animations()
 
+        self.next_level_rect = pygame.Rect(0, 0, 0, 0)
+        self.next_level = 0
+
         self.image = self.animation_frames[self.action][self.direction][self.frame_index]
         self.rect = self.image.get_rect()
         self.z = LAYERS[self.game.world]['Main']
-        self.hitbox = self.rect.copy().inflate(-126, -70)
+        self.hitbox = self.rect.copy().inflate(-130, -80)
+
+    def reload(self, x, y, z, collision_group, coin_group, *groups):
+        self.pos.x = x
+        self.pos.y = y
+        self.rect.centerx = round(self.pos.x)
+        self.rect.centery = round(self.pos.y)
+
+        self.z = z
+        self.collision_group = collision_group
+        self.coin_group = coin_group
+
+        for group in groups:
+            group.add(self)
+
+        self.load_environement()
 
     def load_animations(self):
         path = 'graphics/player/'
@@ -48,16 +66,20 @@ class Player(pygame.sprite.Sprite):
 
                 self.animation_frames[state][direction] = frames
 
+    def load_environement(self):
+        for obj in self.game.gameplay.tmx_data.objects:
+            if 'level' in obj.name:
+                self.next_level_rect.topleft = (obj.x * 4, obj.y * 4)
+                self.next_level_rect.width = obj.width * 4
+                self.next_level_rect.height = obj.height * 4
+                self.next_level = obj.name[6:]
+
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
 
         self.move()
         self.collide()
         self.animate()
-        debug(self.coins)
-
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
 
     def collide(self):
         for sprite in self.collision_group.sprites():
@@ -80,6 +102,20 @@ class Player(pygame.sprite.Sprite):
             if coin.hitbox.colliderect(self.hitbox):
                 coin.kill()
                 self.coins += 1
+
+        if self.next_level_rect.colliderect(self.hitbox):
+            self.game.world = int(self.next_level)
+
+            tmx_data = self.game.gameplay.load_map('data/tmx/level_' + str(self.next_level) + '.tmx')
+            pos = tmx_data.get_object_by_name('player')
+            self.reload(
+                pos.x * 4,
+                pos.y * 4,
+                LAYERS[self.game.world]['Main'],
+                self.collision_group,
+                self.coin_group,
+                self.game.gameplay.all_sprites
+            )
 
     def move(self):
         if len(self.game.lifo_direction_key_pressed) > 0:
