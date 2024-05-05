@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.10.2" name="Overworld" tilewidth="16" tileheight="16" tilecount="1440" columns="40">
- <image source="../../../../Downloads/gfx/gfx/Overworld.png" trans="000000" width="640" height="576"/>
+ <image source="../../graphics/Overworld.png" trans="000000" width="640" height="576"/>
  <tile id="283" probability="100"/>
 </tileset>

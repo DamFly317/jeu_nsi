@@ -1,5 +1,6 @@
 import pygame.image
 from pytmx.util_pygame import load_pygame
+from pytmx.util_pygame import *
 
 from settings import *
 from debug import debug
@@ -48,19 +49,19 @@ class GamePlay:
                     self.collision_group,
                 )
 
-        for layer_name in LAYERS[self.game.world].keys():
+        for layer_name in LAYERS[self.game.level].keys():
             try:
                 tiles = self.tmx_data.get_layer_by_name(layer_name).tiles()
             except ValueError:
                 tiles = []
 
             for x, y, surf in tiles:
-                if layer_name == 'Walls':
+                if layer_name in ('Walls', 'Water'):
                     Generic(
                         (x * 64, y * 64),
                         pygame.transform.scale(surf, (64, 64)),
                         self.all_sprites, self.collision_group,
-                        z=LAYERS[self.game.world][layer_name]
+                        z=LAYERS[self.game.level][layer_name]
                     )
                 elif layer_name == 'Coins':
                     Coin(
@@ -73,7 +74,7 @@ class GamePlay:
                         (x * 64, y * 64),
                         pygame.transform.scale(surf, (64, 64)),
                         self.all_sprites,
-                        z=LAYERS[self.game.world][layer_name]
+                        z=LAYERS[self.game.level][layer_name]
                     )
 
         return self.tmx_data
@@ -126,7 +127,7 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.y = min(self.offset.y, self.game.gameplay.world_height - self.game.screen_height)
         self.offset.y = max(0, self.offset.y)
 
-        for layer_name, layer in LAYERS[self.game.world].items():
+        for layer_name, layer in LAYERS[self.game.level].items():
             for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
                     offset_rect = sprite.rect.copy()

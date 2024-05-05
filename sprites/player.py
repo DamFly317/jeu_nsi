@@ -33,7 +33,7 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.animation_frames[self.action][self.direction][self.frame_index]
         self.rect = self.image.get_rect()
-        self.z = LAYERS[self.game.world]['Main']
+        self.z = LAYERS[self.game.level]['Main']
         self.hitbox = self.rect.copy().inflate(-130, -80)
 
     def reload(self, x, y, z, collision_group, coin_group, *groups):
@@ -104,14 +104,14 @@ class Player(pygame.sprite.Sprite):
                 self.coins += 1
 
         if self.next_level_rect.colliderect(self.hitbox):
-            self.game.world = int(self.next_level)
+            self.game.level = int(self.next_level)
 
             tmx_data = self.game.gameplay.load_map('data/tmx/level_' + str(self.next_level) + '.tmx')
             pos = tmx_data.get_object_by_name('player')
             self.reload(
                 pos.x * 4,
                 pos.y * 4,
-                LAYERS[self.game.world]['Main'],
+                LAYERS[self.game.level]['Main'],
                 self.collision_group,
                 self.coin_group,
                 self.game.gameplay.all_sprites
