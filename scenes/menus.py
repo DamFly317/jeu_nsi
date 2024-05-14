@@ -51,8 +51,7 @@ class MainMenu:
         self.buttons = pygame.sprite.Group()
 
         self.button_play = Button('Jouer', 0, self.buttons)
-        self.button_difficulty = Button('Difficulté', 1, self.buttons)
-        self.button_exit = Button('Quitter', 2, self.buttons)
+        self.button_exit = Button('Quitter', 1, self.buttons)
 
         for button in self.buttons:
             button.set_position()

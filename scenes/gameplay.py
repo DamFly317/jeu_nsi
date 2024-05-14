@@ -17,7 +17,7 @@ class GamePlay:
 
         self.world_width = 0
         self.world_height = 0
-        self.tmx_data = self.load_map('data/tmx/level_0.tmx')
+        self.tmx_data = self.load_map(f'data/tmx/level_{self.game.level}.tmx')
 
         player_pos = self.tmx_data.get_object_by_name('player')
         self.player = Player(
@@ -56,19 +56,24 @@ class GamePlay:
                 tiles = []
 
             for x, y, surf in tiles:
-                if layer_name in ('Walls', 'Water'):
+                if layer_name == 'Walls':
                     Generic(
                         (x * 64, y * 64),
                         pygame.transform.scale(surf, (64, 64)),
                         self.all_sprites, self.collision_group,
                         z=LAYERS[self.game.level][layer_name]
                     )
+                if layer_name == 'Labyrinth':
+                    LabyrinthWall(
+                        (x * 64, y * 64),
+                        pygame.transform.scale(surf, (64, 64)),
+                        self.all_sprites, self.collision_group
+                    )
                 elif layer_name == 'Coins':
                     Coin(
                         (x * 64, y * 64),
                         self.all_sprites, self.coin_group
                     )
-                    print('coin')
                 else:
                     Generic(
                         (x * 64, y * 64),
@@ -133,6 +138,19 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.game.screen.blit(sprite.image, offset_rect)
+
+                    if layer == 'Walls':
+                        pygame.draw.rect(
+                            self.game.screen,
+                            'yellow',
+                            (
+                                sprite.hitbox.x - self.offset.x,
+                                sprite.hitbox.y - self.offset.y,
+                                sprite.hitbox.w,
+                                sprite.hitbox.h
+                            ),
+                            1
+                        )
 
         pygame.draw.rect(
             self.game.screen,

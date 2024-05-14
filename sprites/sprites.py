@@ -11,11 +11,23 @@ class Generic(pygame.sprite.Sprite):
         self.hitbox = self.rect.copy()
 
 
+class LabyrinthWall(Generic):
+    def __init__(self, pos, surf, *groups):
+        super().__init__(
+            pos,
+            surf,
+            *groups,
+            z=LAYERS[1]['Main']
+        )
+        self.test = True
+        self.hitbox = self.hitbox.inflate(-12, -12)
+
+
 class Coin(Generic):
     def __init__(self, pos, *groups):
         super().__init__(
             pos,
             pygame.transform.scale(pygame.image.load('graphics/coin.png'), (50, 50)),
             *groups,
-            z=LAYERS[0]['Main']
+            z=LAYERS[1]['Main']
         )

@@ -30,7 +30,7 @@ class Game:
         self.previous_second = 0
 
         self.difficulty = 0
-        self.level = 0
+        self.level = 1
         self.main_menu = MainMenu(self)
         self.gameplay = GamePlay(self)
         self.gameplay.player.load_environement()
