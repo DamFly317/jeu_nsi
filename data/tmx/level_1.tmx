@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="34" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="21">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="32" height="34" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="36">
  <tileset firstgid="1" source="../tsx/Overworld.tsx"/>
  <tileset firstgid="1441" source="../tsx/coin.tsx"/>
  <layer id="5" name="Water" width="32" height="34">
@@ -312,9 +312,21 @@
   </object>
   <object id="2" name="level_2" x="208.5" y="527.667" width="95.1667" height="16.3333"/>
   <object id="4" name="space_shop" x="47.8182" y="383.636" width="128" height="48.7273"/>
-  <object id="5" name="letter_e" x="137.273" y="376.364">
+  <object id="5" name="letter_e_shop" x="137.273" y="376.364">
    <point/>
   </object>
+  <object id="24" name="letter_e_house1" x="336" y="112">
+   <point/>
+  </object>
+  <object id="25" name="letter_e_house2" x="400" y="112">
+   <point/>
+  </object>
+  <object id="26" name="letter_e_house3" x="464" y="112">
+   <point/>
+  </object>
+  <object id="28" name="space_house1" x="319.909" y="112.125" width="31.9091" height="36.7273"/>
+  <object id="29" name="space_house2" x="384" y="112" width="31.9091" height="36.7273"/>
+  <object id="30" name="space_house3" x="448" y="112" width="31.9091" height="36.7273"/>
  </objectgroup>
  <objectgroup id="11" name="Collisions">
   <object id="12" name="collision" x="0" y="0" width="64" height="192"/>
@@ -326,5 +338,10 @@
   <object id="18" name="collision" x="112" y="48" width="64" height="12"/>
   <object id="19" name="collision" x="98" y="112" width="14" height="80"/>
   <object id="20" name="collision" x="64" y="112" width="14" height="80"/>
+  <object id="21" name="collision" x="64" y="320" width="96" height="90.1818"/>
+  <object id="23" name="collision" x="64" y="400" width="63.8182" height="22.3636"/>
+  <object id="31" name="collision" x="320.043" y="85.0435" width="31.9565" height="39.9565"/>
+  <object id="34" name="collision" x="383.88" y="85.1411" width="31.9565" height="39.9565"/>
+  <object id="35" name="collision" x="447.959" y="85.0217" width="31.9565" height="39.9565"/>
  </objectgroup>
 </map>

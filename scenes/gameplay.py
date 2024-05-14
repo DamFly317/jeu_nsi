@@ -15,6 +15,9 @@ class GamePlay:
         self.collision_group = pygame.sprite.Group()
         self.coin_group = pygame.sprite.Group()
 
+        self.letters_e = {}
+        self.visible_letters_e = {}
+
         self.world_width = 0
         self.world_height = 0
         self.tmx_data = self.load_map(f'data/tmx/level_{self.game.level}.tmx')
@@ -46,8 +49,11 @@ class GamePlay:
                 Generic(
                     (obj.x * 4, obj.y * 4),
                     surf,
-                    self.collision_group,
+                    self.collision_group
                 )
+
+            if 'letter_e' in obj.name:
+                self.letters_e[obj.name[9:]] = KeyE(self.game, obj.x * 4, obj.y * 4)
 
         for layer_name in LAYERS[self.game.level].keys():
             try:
@@ -152,9 +158,8 @@ class CameraGroup(pygame.sprite.Group):
                             1
                         )
 
-        pygame.draw.rect(
-            self.game.screen,
-            'red',
-            (player.hitbox.topleft - self.offset, (player.hitbox.w, player.hitbox.h)),
-            1
-        )
+        for sprite in self.game.gameplay.visible_letters_e.values():
+            offset_rect = sprite.rect.copy()
+            offset_rect.center -= self.offset
+            self.game.screen.blit(sprite.image, offset_rect)
+            sprite.animate()

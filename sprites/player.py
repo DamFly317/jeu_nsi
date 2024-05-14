@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
 
         self.next_level_rect = pygame.Rect(0, 0, 0, 0)
         self.next_level = 0
+        self.spaces = {}
 
         self.image = self.animation_frames[self.action][self.direction][self.frame_index]
         self.rect = self.image.get_rect()
@@ -74,6 +75,14 @@ class Player(pygame.sprite.Sprite):
                 self.next_level_rect.height = obj.height * 4
                 self.next_level = obj.name[6:]
 
+            if 'space' in obj.name:
+                rect = pygame.Rect(0, 0, 0, 0)
+                rect.topleft = (obj.x * 4, obj.y * 4)
+                rect.width = obj.width * 4
+                rect.height = obj.height * 4
+
+                self.spaces[obj.name[6:]] = rect
+
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
 
@@ -116,6 +125,13 @@ class Player(pygame.sprite.Sprite):
                 self.coin_group,
                 self.game.gameplay.all_sprites
             )
+
+        for name, rect in self.spaces.items():
+            if rect.colliderect(self.hitbox):
+                self.game.gameplay.visible_letters_e[name] = self.game.gameplay.letters_e[name]
+            else:
+                if name in self.game.gameplay.visible_letters_e.keys():
+                    self.game.gameplay.visible_letters_e.pop(name)
 
     def move(self):
         if len(self.game.lifo_direction_key_pressed) > 0:
