@@ -30,10 +30,11 @@ class Player(pygame.sprite.Sprite):
 
         self.next_level_rect = pygame.Rect(0, 0, 0, 0)
         self.next_level = 0
+        self.spaces = {}
 
         self.image = self.animation_frames[self.action][self.direction][self.frame_index]
         self.rect = self.image.get_rect()
-        self.z = LAYERS[self.game.world]['Main']
+        self.z = LAYERS[self.game.level]['Main']
         self.hitbox = self.rect.copy().inflate(-130, -80)
 
     def reload(self, x, y, z, collision_group, coin_group, *groups):
@@ -74,6 +75,14 @@ class Player(pygame.sprite.Sprite):
                 self.next_level_rect.height = obj.height * 4
                 self.next_level = obj.name[6:]
 
+            if 'space' in obj.name:
+                rect = pygame.Rect(0, 0, 0, 0)
+                rect.topleft = (obj.x * 4, obj.y * 4)
+                rect.width = obj.width * 4
+                rect.height = obj.height * 4
+
+                self.spaces[obj.name[6:]] = rect
+
     def update(self, *args, **kwargs):
         super().update(*args, **kwargs)
 
@@ -104,18 +113,25 @@ class Player(pygame.sprite.Sprite):
                 self.coins += 1
 
         if self.next_level_rect.colliderect(self.hitbox):
-            self.game.world = int(self.next_level)
+            self.game.level = int(self.next_level)
 
             tmx_data = self.game.gameplay.load_map('data/tmx/level_' + str(self.next_level) + '.tmx')
             pos = tmx_data.get_object_by_name('player')
             self.reload(
                 pos.x * 4,
                 pos.y * 4,
-                LAYERS[self.game.world]['Main'],
+                LAYERS[self.game.level]['Main'],
                 self.collision_group,
                 self.coin_group,
                 self.game.gameplay.all_sprites
             )
+
+        for name, rect in self.spaces.items():
+            if rect.colliderect(self.hitbox):
+                self.game.gameplay.visible_letters_e[name] = self.game.gameplay.letters_e[name]
+            else:
+                if name in self.game.gameplay.visible_letters_e.keys():
+                    self.game.gameplay.visible_letters_e.pop(name)
 
     def move(self):
         if len(self.game.lifo_direction_key_pressed) > 0:

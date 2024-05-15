@@ -1,5 +1,6 @@
 import pygame.image
 from pytmx.util_pygame import load_pygame
+from pytmx.util_pygame import *
 
 from settings import *
 from debug import debug
@@ -14,9 +15,12 @@ class GamePlay:
         self.collision_group = pygame.sprite.Group()
         self.coin_group = pygame.sprite.Group()
 
+        self.letters_e = {}
+        self.visible_letters_e = {}
+
         self.world_width = 0
         self.world_height = 0
-        self.tmx_data = self.load_map('data/tmx/level_0.tmx')
+        self.tmx_data = self.load_map(f'data/tmx/level_{self.game.level}.tmx')
 
         player_pos = self.tmx_data.get_object_by_name('player')
         self.player = Player(
@@ -45,10 +49,13 @@ class GamePlay:
                 Generic(
                     (obj.x * 4, obj.y * 4),
                     surf,
-                    self.collision_group,
+                    self.collision_group
                 )
 
-        for layer_name in LAYERS[self.game.world].keys():
+            if 'letter_e' in obj.name:
+                self.letters_e[obj.name[9:]] = KeyE(self.game, obj.x * 4, obj.y * 4)
+
+        for layer_name in LAYERS[self.game.level].keys():
             try:
                 tiles = self.tmx_data.get_layer_by_name(layer_name).tiles()
             except ValueError:
@@ -60,20 +67,25 @@ class GamePlay:
                         (x * 64, y * 64),
                         pygame.transform.scale(surf, (64, 64)),
                         self.all_sprites, self.collision_group,
-                        z=LAYERS[self.game.world][layer_name]
+                        z=LAYERS[self.game.level][layer_name]
+                    )
+                if layer_name == 'Labyrinth':
+                    LabyrinthWall(
+                        (x * 64, y * 64),
+                        pygame.transform.scale(surf, (64, 64)),
+                        self.all_sprites, self.collision_group
                     )
                 elif layer_name == 'Coins':
                     Coin(
                         (x * 64, y * 64),
                         self.all_sprites, self.coin_group
                     )
-                    print('coin')
                 else:
                     Generic(
                         (x * 64, y * 64),
                         pygame.transform.scale(surf, (64, 64)),
                         self.all_sprites,
-                        z=LAYERS[self.game.world][layer_name]
+                        z=LAYERS[self.game.level][layer_name]
                     )
 
         return self.tmx_data
@@ -126,16 +138,28 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.y = min(self.offset.y, self.game.gameplay.world_height - self.game.screen_height)
         self.offset.y = max(0, self.offset.y)
 
-        for layer_name, layer in LAYERS[self.game.world].items():
+        for layer_name, layer in LAYERS[self.game.level].items():
             for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.game.screen.blit(sprite.image, offset_rect)
 
-        pygame.draw.rect(
-            self.game.screen,
-            'red',
-            (player.hitbox.topleft - self.offset, (player.hitbox.w, player.hitbox.h)),
-            1
-        )
+                    if layer == 'Walls':
+                        pygame.draw.rect(
+                            self.game.screen,
+                            'yellow',
+                            (
+                                sprite.hitbox.x - self.offset.x,
+                                sprite.hitbox.y - self.offset.y,
+                                sprite.hitbox.w,
+                                sprite.hitbox.h
+                            ),
+                            1
+                        )
+
+        for sprite in self.game.gameplay.visible_letters_e.values():
+            offset_rect = sprite.rect.copy()
+            offset_rect.center -= self.offset
+            self.game.screen.blit(sprite.image, offset_rect)
+            sprite.animate()

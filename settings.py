@@ -20,20 +20,18 @@ PLAYER_COLOR = (255, 0, 0)
 
 LAYERS = [
     {
-        'Ground': 0,
-        'Walls': 1,
-        'Decoration': 2,
-        'Main': 3
+
     },  # LEVEL 0
     {
         'Water': 0,
         'Ground': 1,
         'Bridge': 2,
         'Walls': 3,
-        'Houses': 4,
-        'Decorations': 5,
-        'Main': 6,
-        'Coins': 7
+        'Labyrinth': 4,
+        'Houses': 5,
+        'Decorations': 6,
+        'Main': 7,
+        'Coins': 8
     },  #LEVEL 1
 ]
 
