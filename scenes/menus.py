@@ -60,14 +60,17 @@ class MainMenu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game.running = False
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.game.quit()
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
                 for button in self.buttons:
                     if button.rect.collidepoint(x, y):
                         if button == self.button_play:
                             self.game.state = self.game.gameplay
-                        elif button == self.button_difficulty:
-                            self.game.state = DifficultyMenu(self.game)
                         elif button == self.button_exit:
                             self.game.quit()
 
